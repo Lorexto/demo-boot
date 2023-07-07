@@ -59,9 +59,14 @@ pipeline {
                 echo 'Going into production'
             }
         }
-        
-        
-        
+
+         stage('Deploy to prod env'){
+            steps{
+                sh "docker  -H 13.38.93.152 stop demo-app || true"
+                sh "docker  -H 13.38.93.152 rm demo-app || true"
+                sh "docker  -H 13.38.93.152 run -d -p80:8080  --name demo-app $registry:$BUILD_NUMBER"
+            }
+        }
         
         
     }
