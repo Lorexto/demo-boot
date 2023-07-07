@@ -31,7 +31,7 @@ pipeline {
           }
         }
         stage('SonarQube Analysis') {
-            withSonarQubeEnv() {
+            steps {
                 sh "mvn clean verify sonar:sonar -Dsonar.projectKey=demo-boot  -Dsonar.host.url='http://192.168.33.10:9000' -Dsonar.projectName='demo-boot'"
             }
         }
