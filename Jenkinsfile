@@ -4,6 +4,10 @@ pipeline {
     environment {
         registry="lorexto/demo-boot-mb"
         registryCredential="docker-hub"
+        containerName="demo-app"
+        appPort= "8080"
+        testPort="8180"
+        prodIP="13.38.93.152" //ip publique instance production sur AWS
     }
 
     stages {
@@ -47,9 +51,9 @@ pipeline {
         
          stage('Deploy to test env'){
             steps{
-                sh "docker stop demo-app || true"
-                sh "docker rm demo-app || true"
-                sh "docker run -d -p8180:8080  --name demo-app $registry:$BUILD_NUMBER"
+                sh "docker stop $containerName || true"
+                sh "docker rm $containerName || true"
+                sh "docker run -d -p$testPort:$appPort  --name $containerName $registry:$BUILD_NUMBER"
             }
         }
 
@@ -62,9 +66,18 @@ pipeline {
 
          stage('Deploy to prod env'){
             steps{
-                sh "docker  -H 13.38.93.152 stop demo-app || true"
-                sh "docker  -H 13.38.93.152 rm demo-app || true"
-                sh "docker  -H 13.38.93.152 run -d -p80:8080  --name demo-app $registry:$BUILD_NUMBER"
+                sh "docker  -H $prodIP stop $containerName || true"
+                sh "docker  -H $prodIP rm $containerName || true"
+                sh "docker  -H $prodIP run -d -p80:$appPort  --name $containerName $registry:$BUILD_NUMBER"
+            }
+        }
+
+
+         stage('Clean test env'){
+            steps{
+                sh "docker  stop $containerName || true"
+                sh "docker  rm $containerName || true"
+                sh "docker  rmi  $registry:$registry:$BUILD_NUMBER"
             }
         }
         
