@@ -32,13 +32,13 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
-                sh "mvn clean verify sonar:sonar -Dsonar.projectKey=demo-boot  -Dsonar.host.url='http://192.168.33.10:9000' -Dsonar.projectName='demo-boot'"
+                sh "mvn clean verify sonar:sonar -Dsonar.token=sqp_d264e6efaf0feba40200034dfa5cd180dedd86d3 -Dsonar.host.url='http://192.168.33.10:9000' -Dsonar.projectName='demo-boot'"
             }
         }
         stage('SonarQube - SAST') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-application -Dsonar.projectName='numeric-application' -Dsonar.host.url=http://192.168.33.10:9000 -Dsonar.token=sqp_2cf746e1a5f986afef77df28c9adc48fee626529"
+                    sh "mvn clean verify sonar:sonar  -Dsonar.projectName='demo-boot' -Dsonar.host.url=http://192.168.33.10:9000 -Dsonar.token=Dsonar.token=sqp_d264e6efaf0feba40200034dfa5cd180dedd86d3"
                 }
             timeout(time: 2, unit: 'MINUTES') {
                 script {
