@@ -30,6 +30,12 @@ pipeline {
             }
           }
         }
+        stage('SonarQube Analysis') {
+            def mvn = tool 'Default Maven';
+            withSonarQubeEnv() {
+                sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=demo-boot -Dsonar.projectName='demo-boot'"
+            }
+        }
         stage('SonarQube - SAST') {
             steps {
                 withSonarQubeEnv('SonarQube') {
