@@ -52,6 +52,13 @@ pipeline {
                 sh "docker run -d -p8180:8080  --name demo-app $registry:$BUILD_NUMBER"
             }
         }
+
+        stage('Prod env') {
+            steps {
+                input 'do you approve deployment ?'
+                echo 'Going into production'
+            }
+        }
         
         
         
